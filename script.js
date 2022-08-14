@@ -1,5 +1,5 @@
 // WebSocket variables
-const url = "wss:https://rummikub-server.herokuapp.com/server";
+const url = "wss://rummikub-server.herokuapp.com/server";
 const myWSServer = new WebSocket(url);
 
 const myMessages = document.getElementById("messages");
