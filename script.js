@@ -5,7 +5,7 @@ const myWSServer = new WebSocket(url);
 const myMessages = document.getElementById("messages");
 const myInput = document.getElementById("message");
 const sendBtn = document.getElementById("send");
-console.log(myInput);
+
 const sendMsg = () => {
 	const text = myInput.value;
 	msgGeneration(text, "Client");
@@ -18,11 +18,28 @@ const msgGeneration = (msg, from) => {
 	myMessages.appendChild(newMessage);
 };
 
-myWSServer.onopen = () => (sendBtn.disabled = false);
+const ping = () => {
+	myWSServer.send("__ping__");
+	tm = setTimeout(() => {
+		console.log("Pong not received, connection closed");
+		myWSServer.close();
+	}, 5000);
+};
 
-myWSServer.onmessage = (e) => {
-	const { data } = e;
-	msgGeneration(data, "Server");
+const pong = () => clearTimeout(tm);
+
+myWSServer.onopen = () => {
+	sendBtn.disabled = false;
+	setInterval(ping, 30000);
+};
+
+myWSServer.onmessage = (event) => {
+	const { msg } = event;
+	if (msg === "__pong__") {
+		pong();
+		return;
+	}
+	msgGeneration(msg, "Server");
 };
 
 sendBtn.disabled = true;
