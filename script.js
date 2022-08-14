@@ -35,7 +35,7 @@ myWSServer.onopen = () => {
 
 myWSServer.onmessage = (event) => {
 	const { msg } = event;
-	if (msg === "__pong__") {
+	if (msg === "__ping__") {
 		pong();
 		return;
 	}
